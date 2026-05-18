@@ -1,0 +1,9 @@
+﻿global using System;
+global using System.Collections;
+global using System.Collections.Generic;
+global using System.Linq;
+global using BepInEx;
+global using BepInEx.Configuration;
+global using HarmonyLib;
+global using Photon.Pun;
+global using UnityEngine;
