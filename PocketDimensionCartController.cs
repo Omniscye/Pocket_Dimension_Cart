@@ -10,6 +10,7 @@ internal sealed partial class PocketDimensionCartController : MonoBehaviourPun
     private const string SyncStoredTotalsRpc = "PocketDimensionSyncStoredTotals";
 
     private readonly List<int> _storedViewIds = new();
+    private readonly HashSet<int> _extractingCosmeticViewIds = new();
     private PhysGrabCart _cart = null!;
     private PhotonView _cartPhotonView = null!;
     private GameObject _roomRoot = null!;

@@ -1,19 +1,23 @@
-# Pocket Dimension Cart v1.3.0
-
+# Pocket Dimension Cart v1.6.0
 Turns REPO carts into pocket dimensions for valuables.
+[![GitHub](https://img.shields.io/badge/GitHub-Pocket_Dimension_Cart-brightgreen?style=for-the-badge&logo=github)](https://github.com/Omniscye/Pocket_Dimension_Cart)
 
 ![Pocket Dimension Cart 1](https://i.ibb.co/823ttPr/Video1.gif)
 ![Pocket Dimension Cart 2](https://i.ibb.co/1J9vyTKt/Video2.gif)
 ![Pocket Dimension Cart 3](https://i.ibb.co/Y7fWmrTv/Video3.gif)
 
-## Changelog 1.3.0
+## Changelog 1.6.0
 
-- Fixed issue with Pocket Cart being in inventory causing players to get stuck in the Pocket Dimension.
-- You can no longer run/tumble inside the Pocket Dimension.
+- Cosmetic Boxes can now be stored.
+- Increased capacity (Stuff was popping out when to full ).
 
-## Changelog 1.2.0
+## Changelog 1.5.1
 
-- Added offline support.
+- Carts can now be extracted while valuables are inside the Pocket Dimension.
+
+## Discord server
+
+- http://discord.gg/empress
 
 ## What This Mod Does
 
@@ -22,14 +26,14 @@ Turns REPO carts into pocket dimensions for valuables.
 - Hop into the cart to enter the pocket dimension.
 - Grab valuables inside the pocket dimension and push them through the exit to pop them back out of the cart.
 - Cart value still counts valuables stored inside the pocket dimension.
-- Press the cart action key (Default X) to pop out one stored valuable at any time.
+- Press the cart action key (Default X) to pop out one stored valuable at anytime.
 - Hold the cart action key (Default X) to pop out everything, one valuable at a time.
 - Ejected valuables get short damage protection and cannot instantly fall back into storage.
 
 ## How To Use
 
 - Put valuables in a cart.
-- Jump into the cart to enter its pocket dimension if you want to. You do not have to.
+- Jump into the cart to enter its pocket dimension if you want to (You do not have to).
 - Walk into the exit portal to leave.
 - Push valuables into the exit portal to send them back to the real level.
 - Look at or grab the cart to use the cart controls.
@@ -59,8 +63,7 @@ Pocket Dimension Cart is host-authoritative.
 - The host owns the cart storage state.
 - Clients request cart actions from the host.
 - Stored valuables, ejected valuables, cart totals, and pocket dimension actions are synced.
-- Everyone needs the mod.
-
+- Everyone NEEDS THE MOD
 ## Notes
 
 - This mod does not delete valuables.
@@ -74,11 +77,3 @@ Pocket Dimension Cart is host-authoritative.
 - Created by **Omniscye/Empress**
 
 > It is not a cart anymore. It is a loot vault with wheels.
-
-## License
-
-Pocket Dimension Cart is licensed under the GNU General Public License v3.0.
-
-## Discord
-
-If you need support for my mods or just want to hang out, join my personal Discord server: https://discord.gg/WZ6fWG4v3u

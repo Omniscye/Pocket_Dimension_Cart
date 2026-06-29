@@ -26,11 +26,11 @@ internal sealed partial class PocketDimensionCartController
         _playerExitPosition = _roomOrigin + new Vector3(0f, 1.5f, 8.4f);
         _valuableExitPosition = _playerExitPosition + new Vector3(0f, 0.5f, 0f);
         _roomRoot = new GameObject($"Pocket Dimension Cart Room {viewSeed}");
-        CreateRoomBlock("Floor", _roomOrigin + new Vector3(0f, -0.1f, 0f), new Vector3(18f, 0.2f, 18f), new Color(0.12f, 0.08f, 0.18f, 1f), trigger: false);
+        CreateRoomBlock("Floor", _roomOrigin + new Vector3(0f, -0.1f, -36f), new Vector3(18f, 0.2f, 90f), new Color(0.12f, 0.08f, 0.18f, 1f), trigger: false);
         CreateRoomBlock("North Wall", _roomOrigin + new Vector3(0f, 3f, 9f), new Vector3(18f, 6f, 0.3f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
-        CreateRoomBlock("South Wall", _roomOrigin + new Vector3(0f, 3f, -9f), new Vector3(18f, 6f, 0.3f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
-        CreateRoomBlock("East Wall", _roomOrigin + new Vector3(9f, 3f, 0f), new Vector3(0.3f, 6f, 18f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
-        CreateRoomBlock("West Wall", _roomOrigin + new Vector3(-9f, 3f, 0f), new Vector3(0.3f, 6f, 18f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
+        CreateRoomBlock("South Wall", _roomOrigin + new Vector3(0f, 3f, -81f), new Vector3(18f, 6f, 0.3f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
+        CreateRoomBlock("East Wall", _roomOrigin + new Vector3(9f, 3f, -36f), new Vector3(0.3f, 6f, 90f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
+        CreateRoomBlock("West Wall", _roomOrigin + new Vector3(-9f, 3f, -36f), new Vector3(0.3f, 6f, 90f), new Color(0.16f, 0.1f, 0.24f, 1f), trigger: false);
 
         GameObject valuableExit = CreateRoomBlock("Pocket Exit", _valuableExitPosition, new Vector3(4.5f, 3.2f, 2.2f), new Color(0.3f, 0.8f, 1f, 0.35f), trigger: true);
         _exitCollider = valuableExit.GetComponent<Collider>();

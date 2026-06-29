@@ -8,9 +8,17 @@ internal sealed partial class PocketDimensionCartController
         return viewId != 0 && _storedViewIds.Contains(viewId);
     }
 
+    internal static bool CanStoreObject(PhysGrabObject physGrabObject)
+    {
+        return physGrabObject
+            && (physGrabObject.GetComponent<ValuableObject>()
+                || physGrabObject.GetComponent<ItemValuableBox>()
+                || physGrabObject.GetComponent<CosmeticWorldObject>());
+    }
+
     public void StoreValuable(PhysGrabObject physGrabObject)
     {
-        if (!PocketDimensionCartRuntime.IsRealLevel || !SemiFunc.IsMasterClientOrSingleplayer() || !CartCanOpenPocket() || !physGrabObject || !physGrabObject.GetComponent<ValuableObject>())
+        if (!PocketDimensionCartRuntime.IsRealLevel || !SemiFunc.IsMasterClientOrSingleplayer() || !CartCanOpenPocket() || !CanStoreObject(physGrabObject))
         {
             return;
         }
@@ -173,6 +181,41 @@ internal sealed partial class PocketDimensionCartController
         return _cart && _cart.valueScreen == valueScreen;
     }
 
+    public bool CartInExtractionPoint()
+    {
+        if (!_cart || !_cart.physGrabObject || !_cart.physGrabObject.roomVolumeCheck)
+        {
+            return false;
+        }
+
+        _cart.physGrabObject.roomVolumeCheck.CheckSet();
+        return _cart.physGrabObject.roomVolumeCheck.inExtractionPoint;
+    }
+
+    public int SyncStoredValuablesForExtraction(RoundDirector roundDirector)
+    {
+        if (!roundDirector || !CartInExtractionPoint())
+        {
+            return 0;
+        }
+
+        CleanupStoredList();
+        int addedValue = 0;
+
+        foreach (int viewId in _storedViewIds)
+        {
+            PhysGrabObject? physGrabObject = GetPhysGrabObject(viewId);
+            if (physGrabObject == null || !physGrabObject)
+            {
+                continue;
+            }
+
+            addedValue += SyncStoredObjectForExtraction(roundDirector, physGrabObject);
+        }
+
+        return addedValue;
+    }
+
     private void SyncStoredTotals()
     {
         RefreshStoredTotals();
@@ -200,11 +243,7 @@ internal sealed partial class PocketDimensionCartController
             }
 
             count++;
-            ValuableObject valuableObject = physGrabObject.GetComponent<ValuableObject>();
-            if (valuableObject)
-            {
-                value += (int)valuableObject.dollarValueCurrent;
-            }
+            value += GetStoredObjectValue(physGrabObject);
         }
 
         _syncedStoredCount = count;
@@ -254,6 +293,7 @@ internal sealed partial class PocketDimensionCartController
         {
             if (!GetPhysGrabObject(_storedViewIds[i]))
             {
+                _extractingCosmeticViewIds.Remove(_storedViewIds[i]);
                 _storedViewIds.RemoveAt(i);
             }
         }
@@ -261,9 +301,68 @@ internal sealed partial class PocketDimensionCartController
 
     private Vector3 GetStoragePosition(int index)
     {
-        int column = index % 5;
-        int row = index / 5;
-        return _roomOrigin + new Vector3((column - 2) * 2.4f, 1.2f, -4.8f + row * 2.4f);
+        const int columns = 5;
+        const int rowsPerLayer = 30;
+        int slot = index % (columns * rowsPerLayer);
+        int layer = index / (columns * rowsPerLayer);
+        int column = slot % columns;
+        int row = slot / columns;
+        return _roomOrigin + new Vector3((column - 2) * 2.4f, 1.2f + layer * 2f, -4.8f - row * 2.4f);
+    }
+
+    private int SyncStoredObjectForExtraction(RoundDirector roundDirector, PhysGrabObject physGrabObject)
+    {
+        ValuableObject valuableObject = physGrabObject.GetComponent<ValuableObject>();
+        if (valuableObject)
+        {
+            if (roundDirector.dollarHaulList.Contains(valuableObject.gameObject))
+            {
+                return 0;
+            }
+
+            roundDirector.dollarHaulList.Add(valuableObject.gameObject);
+            valuableObject.AddToDollarHaulList();
+            return Mathf.Max(0, (int)valuableObject.dollarValueCurrent);
+        }
+
+        ItemValuableBox valuableBox = physGrabObject.GetComponent<ItemValuableBox>();
+        if (valuableBox)
+        {
+            if (roundDirector.valuableBoxHaulList.Contains(valuableBox))
+            {
+                return 0;
+            }
+
+            roundDirector.valuableBoxHaulList.Add(valuableBox);
+            valuableBox.AddToExtractionHaul();
+            return Mathf.Max(0, Mathf.RoundToInt(valuableBox.ExtractionValue));
+        }
+
+        CosmeticWorldObject cosmeticWorldObject = physGrabObject.GetComponent<CosmeticWorldObject>();
+        int viewId = PocketDimensionCartRuntime.GetViewId(physGrabObject);
+        if (cosmeticWorldObject && viewId != 0 && !cosmeticWorldObject.inExtraction && _extractingCosmeticViewIds.Add(viewId))
+        {
+            cosmeticWorldObject.Extract();
+        }
+
+        return 0;
+    }
+
+    private static int GetStoredObjectValue(PhysGrabObject physGrabObject)
+    {
+        ValuableObject valuableObject = physGrabObject.GetComponent<ValuableObject>();
+        if (valuableObject)
+        {
+            return Mathf.Max(0, (int)valuableObject.dollarValueCurrent);
+        }
+
+        ItemValuableBox valuableBox = physGrabObject.GetComponent<ItemValuableBox>();
+        if (valuableBox)
+        {
+            return Mathf.Max(0, Mathf.RoundToInt(valuableBox.CurrentValue));
+        }
+
+        return 0;
     }
 
     private static void ResetCartState(PhysGrabObject physGrabObject)

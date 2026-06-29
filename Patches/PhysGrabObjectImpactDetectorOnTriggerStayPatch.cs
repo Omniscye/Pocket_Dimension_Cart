@@ -10,7 +10,12 @@ internal static class PhysGrabObjectImpactDetectorOnTriggerStayPatch
             return;
         }
 
-        if (!other.CompareTag("Cart") || !__instance.isValuable || !__instance.physGrabObject || !__instance.currentCart)
+        if (!other.CompareTag("Cart") || !__instance.physGrabObject || !__instance.currentCart)
+        {
+            return;
+        }
+
+        if (!PocketDimensionCartController.CanStoreObject(__instance.physGrabObject))
         {
             return;
         }

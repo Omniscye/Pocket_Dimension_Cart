@@ -5,7 +5,7 @@ public sealed class PocketDimensionCartPlugin : BaseUnityPlugin
 {
     public const string PluginGuid = "empress.repo.pocketdimensioncart";
     public const string PluginName = "Pocket Dimension Cart";
-    public const string PluginVersion = "1.3.0";
+    public const string PluginVersion = "1.6.0";
 
     internal static PocketDimensionCartPlugin Instance = null!;
     internal static ConfigEntry<KeyCode> ActionKey = null!;

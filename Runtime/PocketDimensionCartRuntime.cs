@@ -168,6 +168,70 @@ internal static class PocketDimensionCartRuntime
         return null;
     }
 
+    internal static int SyncExtractionHaul(RoundDirector roundDirector)
+    {
+        if (!roundDirector || !IsRealLevel || SemiFunc.RunIsShop())
+        {
+            return 0;
+        }
+
+        int addedValue = 0;
+
+        if (SemiFunc.IsMasterClientOrSingleplayer())
+        {
+            for (int i = roundDirector.dollarHaulList.Count - 1; i >= 0; i--)
+            {
+                GameObject haulObject = roundDirector.dollarHaulList[i];
+                if (!haulObject)
+                {
+                    continue;
+                }
+
+                PhysGrabObject physGrabObject = haulObject.GetComponent<PhysGrabObject>();
+                PocketDimensionCartController? owner = physGrabObject ? GetOwner(physGrabObject) : null;
+                if (owner != null && !owner.CartInExtractionPoint())
+                {
+                    ValuableObject valuableObject = haulObject.GetComponent<ValuableObject>();
+                    if (valuableObject)
+                    {
+                        roundDirector.dollarHaulList.RemoveAt(i);
+                        valuableObject.RemoveFromDollarHaulList();
+                    }
+                }
+            }
+
+            for (int i = roundDirector.valuableBoxHaulList.Count - 1; i >= 0; i--)
+            {
+                ItemValuableBox valuableBox = roundDirector.valuableBoxHaulList[i];
+                if (!valuableBox)
+                {
+                    continue;
+                }
+
+                PhysGrabObject physGrabObject = valuableBox.GetComponent<PhysGrabObject>();
+                PocketDimensionCartController? owner = physGrabObject ? GetOwner(physGrabObject) : null;
+                if (owner != null && !owner.CartInExtractionPoint())
+                {
+                    roundDirector.valuableBoxHaulList.RemoveAt(i);
+                    valuableBox.RemoveFromExtractionHaul();
+                }
+            }
+
+            foreach (PocketDimensionCartController controller in Controllers.ToArray())
+            {
+                if (!controller)
+                {
+                    Controllers.Remove(controller);
+                    continue;
+                }
+
+                addedValue += controller.SyncStoredValuablesForExtraction(roundDirector);
+            }
+        }
+
+        return addedValue;
+    }
+
     internal static bool PlayerInsideAnyPocketRoom(PlayerAvatar? player)
     {
         if (player == null)
